@@ -22,14 +22,9 @@ class AdvertisementController extends Controller
 
     public function show(int $id): JsonResponse
     {
-        $advertisement = Advertisement::with('files')->find($id)->get();
-        $images = [];
-        foreach ($advertisement->files as $file) {
-            $images[] = Storage::get($file->name);
-        }
+        $advertisement = Advertisement::with('files')->find($id);
 
-
-        return response()->json($advertisement);
+        return response()->json($advertisement->only(['id', 'title', 'description', 'price', 'files']));
     }
 
     public function store(AdvertisementGeneralRequest $request): JsonResponse
@@ -42,7 +37,7 @@ class AdvertisementController extends Controller
 
         $files = $request->file('files');
         foreach ($files as $file) {
-            $path = $file->store('images');
+            $path = $file->store('public');
 
             $file = new File();
             $file->name = $path;
