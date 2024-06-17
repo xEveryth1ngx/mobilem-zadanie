@@ -1,0 +1,34 @@
+<script setup>
+
+import MainLayout from "../App.vue";
+import {ref} from "vue";
+import Advertisement from "../components/Advertisements/Advertisement.vue";
+
+const advertisements = ref([
+  {
+    id: 1,
+    title: "Ad 1",
+    description: "This is the first ad"
+  },
+  {
+    id: 2,
+    title: "Ad 2",
+    description: "This is the second ad"
+  },
+  {
+    id: 3,
+    title: "Ad 3",
+    description: "This is the third ad"
+  }
+]);
+</script>
+
+<template>
+    <div v-for="advertisement in advertisements">
+      <Advertisement />
+    </div>
+</template>
+
+<style scoped>
+
+</style>
