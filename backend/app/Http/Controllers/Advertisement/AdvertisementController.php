@@ -36,6 +36,10 @@ class AdvertisementController extends Controller
         $advertisement->save();
 
         $files = $request->file('files');
+
+        if (!$files) {
+            return response()->json($advertisement);
+        }
         foreach ($files as $file) {
             $path = $file->store('public');
 

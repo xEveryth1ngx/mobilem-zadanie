@@ -1,19 +1,22 @@
 <script setup>
 
+import { defineProps } from 'vue';
+
+const props = defineProps({
+  advertisement: Object,
+});
 </script>
 
 <template>
   <div>
-    <h3>Advertisement</h3>
-    <img src="../../assets/RE-OD-HARMONIA-GRAND.jpg">
+    <h3>{{ props.advertisement?.title }}</h3>
+    <img :src="props.advertisement?.image" alt="advertisement image" />
     <p>
-      Description of the advertisement.
+      {{ props.advertisement?.description }}
     </p>
-    <div>29.00 USD</div>
-    <button type="button">Buy</button>
+    <div id="buy-button">{{ props.advertisement?.price }} USD</div>
   </div>
 </template>
 
 <style scoped>
-
 </style>
