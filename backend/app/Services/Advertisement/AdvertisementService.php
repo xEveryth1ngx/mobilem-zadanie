@@ -10,12 +10,12 @@ use Illuminate\Support\Facades\Storage;
 
 class AdvertisementService
 {
-    public function findAdvertisement(int $id): Advertisement
+    public function findAdvertisement(int $id): ?Advertisement
     {
         return Advertisement::find($id);
     }
 
-    public function findAdvertisementWithFiles(int $id): Advertisement
+    public function findAdvertisementWithFiles(int $id): ?Advertisement
     {
         return Advertisement::with('files')->find($id);
     }
@@ -62,6 +62,13 @@ class AdvertisementService
         $this->storeAdvertisementFiles($advertisement, $advertisementDTO->files);
 
         return $advertisement;
+    }
+
+    public function deleteAdvertisement(Advertisement $advertisement): void
+    {
+        $this->deleteAdvertisementFiles($advertisement);
+
+        $advertisement->delete();
     }
 
     private function deleteAdvertisementFiles(Advertisement $advertisement): void

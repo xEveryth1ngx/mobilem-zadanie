@@ -24,7 +24,7 @@ const props = defineProps({
     <p>
       {{ props.advertisement?.description }}
     </p>
-    <div id="buy-button">{{ props.advertisement?.price }} USD</div>
+    <div>{{ props.advertisement?.price }} USD</div>
   </div>
 </template>
 

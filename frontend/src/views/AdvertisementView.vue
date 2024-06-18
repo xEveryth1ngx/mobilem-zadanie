@@ -25,7 +25,12 @@ onBeforeMount(async () => {
 <template>
   <div class="advertisement-container">
     <Advertisement :advertisement="advertisement" />
-    <button id="buy-button" type="button">Buy</button>
+    <div>
+      <button id="buy-button" type="button">Buy</button>
+      <RouterLink :to="`/advertisement/update/${route.params.id}`">
+        <button type="button">Update</button>
+      </RouterLink>
+    </div>
   </div>
 </template>
 

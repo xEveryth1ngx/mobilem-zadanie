@@ -1,6 +1,7 @@
 <script setup>
-import {ref} from 'vue';
+import {onMounted, ref} from 'vue';
 import {config} from "../../config.js";
+import {useRoute} from "vue-router";
 
 const props = defineProps({
   path: String,
@@ -13,10 +14,12 @@ const props = defineProps({
     required: false,
   },
   price: {
-    type: Number,
+    type: String,
     required: false,
   }
 })
+
+const route = useRoute();
 
 const form = ref(null);
 const files = ref(null);
@@ -34,10 +37,20 @@ const handleSubmit = async () => {
 
   const formDataObject = new FormData(form.value);
 
-  const response = await fetch(config.backendUrl + '/' + props.path, {
+  let url = `${config.backendUrl}/create`;
+  let requestData = {
     method: 'POST',
-    body: formDataObject
-  });
+    body: formDataObject,
+  };
+
+  if (props.path === 'update') {
+    url = `${config.backendUrl}/update/${route.params.id}`;
+    requestData.headers = {
+      "X-HTTP-Method-Override": "PUT",
+    };
+  }
+
+  const response = await fetch(url, requestData);
 
   if (response.ok) {
     console.log('success');
@@ -52,13 +65,13 @@ const handleSubmit = async () => {
   <form @submit.prevent="handleSubmit" ref="form">
     <div>
       <label for="title">Title</label>
-      <input name="title" type="text" :value="values.title" required>
+      <input name="title" type="text" :value="props.title" required>
     </div>
     <div>
       <label for="description">Description</label>
       <textarea
           name="description"
-          :value="values.description"
+          :value="props.description"
           required
       >
         {{ values.description }}
@@ -66,7 +79,7 @@ const handleSubmit = async () => {
     </div>
     <div>
       <label for="price">Price</label>
-      <input name="price" type="text" :value="values.price" required>
+      <input name="price" type="text" :value="props.price" required>
     </div>
     <div>
       <label for="image">Image</label>

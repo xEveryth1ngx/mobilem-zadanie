@@ -9,6 +9,7 @@ use App\Models\Advertisement\Advertisement;
 use App\Models\General\File;
 use App\Services\Advertisement\AdvertisementService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 
 class AdvertisementController extends Controller
 {
@@ -27,6 +28,12 @@ class AdvertisementController extends Controller
     public function show(int $id): JsonResponse
     {
         $advertisement = $this->service->findAdvertisementWithFiles($id);
+
+        if (!$advertisement) {
+            return response()->json([
+                'message' => 'Advertisement not found!',
+            ], Response::HTTP_NOT_FOUND);
+        }
 
         return response()->json($advertisement->only([
             'id', 'title', 'description', 'price', 'files',
@@ -57,8 +64,32 @@ class AdvertisementController extends Controller
         );
 
         $advertisement = $this->service->findAdvertisementWithFiles($id);
+
+        if (!$advertisement) {
+            return response()->json([
+                'message' => 'Advertisement not found!',
+            ], Response::HTTP_NOT_FOUND);
+        }
+
         $advertisement = $this->service->updateAdvertisement($advertisement, $advertisementDTO);
 
         return response()->json($advertisement);
+    }
+
+    public function destroy(int $id): JsonResponse
+    {
+        $advertisement = $this->service->findAdvertisementWithFiles($id);
+
+        if (!$advertisement) {
+            return response()->json([
+                'message' => 'Advertisement not found!',
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        $this->service->deleteAdvertisement($advertisement);
+
+        return response()->json([
+            'message' => 'Advertisement deleted successfully!',
+        ]);
     }
 }
