@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Advertisement;
 
 use App\DTO\AdvertisementDTO;
+use App\Exception\Advertisement\AdvertisementNotFoundException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Advertisement\AdvertisementGeneralRequest;
-use App\Models\Advertisement\Advertisement;
-use App\Models\General\File;
 use App\Services\Advertisement\AdvertisementService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
@@ -27,9 +26,9 @@ class AdvertisementController extends Controller
 
     public function show(int $id): JsonResponse
     {
-        $advertisement = $this->service->findAdvertisementWithFiles($id);
-
-        if (!$advertisement) {
+        try {
+            $advertisement = $this->service->findAdvertisementWithFiles($id);
+        } catch (AdvertisementNotFoundException) {
             return response()->json([
                 'message' => 'Advertisement not found!',
             ], Response::HTTP_NOT_FOUND);
@@ -63,9 +62,9 @@ class AdvertisementController extends Controller
             $request->file('files'),
         );
 
-        $advertisement = $this->service->findAdvertisementWithFiles($id);
-
-        if (!$advertisement) {
+        try {
+            $advertisement = $this->service->findAdvertisementWithFiles($id);
+        } catch (AdvertisementNotFoundException) {
             return response()->json([
                 'message' => 'Advertisement not found!',
             ], Response::HTTP_NOT_FOUND);
@@ -78,12 +77,12 @@ class AdvertisementController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
-        $advertisement = $this->service->findAdvertisementWithFiles($id);
-
-        if (!$advertisement) {
+        try {
+            $advertisement = $this->service->findAdvertisementWithFiles($id);
+        } catch (AdvertisementNotFoundException) {
             return response()->json([
-                'message' => 'Advertisement not found!',
-            ], Response::HTTP_NOT_FOUND);
+                'message' => 'Advertisement deletion failed!',
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $this->service->deleteAdvertisement($advertisement);

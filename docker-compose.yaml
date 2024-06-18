@@ -37,21 +37,21 @@ services:
     volumes:
       - ./data/db-normal:/var/lib/mysql
     tty: true
-  db-test:
-    image: mysql:8.0
-    container_name: db-test
-    environment:
-      MYSQL_DATABASE: mobilem
-      MYSQL_ROOT_PASSWORD: 12345678
-      MYSQL_PASSWORD: 12345678
-      MYSQL_USER: user
-    ports:
-      - 3307:3306
-    volumes:
-      - ./data/db-normal:/var/lib/mysql
-    tty: true
-    depends_on:
-      - db
+#  db-test:
+#    image: mysql:8.0
+#    container_name: db-test
+#    environment:
+#      MYSQL_DATABASE: mobilem-test
+#      MYSQL_ROOT_PASSWORD: 12345678
+#      MYSQL_PASSWORD: 12345678
+#      MYSQL_USER: user
+#    ports:
+#      - 3307:3306
+#    volumes:
+#      - ./data/db-normal:/var/lib/mysql
+#    tty: true
+#    depends_on:
+#      - db
   vite:
     container_name: node
     build: docker/front

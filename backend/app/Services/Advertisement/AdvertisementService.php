@@ -3,6 +3,7 @@
 namespace App\Services\Advertisement;
 
 use App\DTO\AdvertisementDTO;
+use App\Exception\Advertisement\AdvertisementNotFoundException;
 use App\Models\Advertisement\Advertisement;
 use App\Models\General\File;
 use Illuminate\Database\Eloquent\Collection;
@@ -10,14 +11,32 @@ use Illuminate\Support\Facades\Storage;
 
 class AdvertisementService
 {
+    /**
+     * @throws AdvertisementNotFoundException
+     */
     public function findAdvertisement(int $id): ?Advertisement
     {
-        return Advertisement::find($id);
+        $advertisement = Advertisement::find($id);
+
+        if (!$advertisement) {
+            throw new AdvertisementNotFoundException();
+        }
+
+        return $advertisement;
     }
 
-    public function findAdvertisementWithFiles(int $id): ?Advertisement
+    /**
+     * @throws AdvertisementNotFoundException
+     */
+    public function findAdvertisementWithFiles(int $id): Advertisement
     {
-        return Advertisement::with('files')->find($id);
+        $advertisement = Advertisement::with('files')->find($id);
+
+        if (!$advertisement) {
+            throw new AdvertisementNotFoundException();
+        }
+
+        return $advertisement;
     }
 
     public function getAllAdvertisements(): Collection

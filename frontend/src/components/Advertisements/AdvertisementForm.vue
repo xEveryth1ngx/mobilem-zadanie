@@ -2,6 +2,7 @@
 import {onMounted, ref} from 'vue';
 import {config} from "../../config.js";
 import {useRoute} from "vue-router";
+import {router} from "../../router.js";
 
 const props = defineProps({
   path: String,
@@ -23,15 +24,27 @@ const route = useRoute();
 
 const form = ref(null);
 const files = ref(null);
+const errors = ref([]);
 const values = ref({
   title: props.title,
   description: props.description,
   price: props.price,
 });
 
-const handleSubmit = async () => {
+const validateData = () => {
   if (files.value.files.length > 5) {
-    console.log('oopsie, too many files');
+    errors.value.push('oopsie, too many files! Max 5 files allowed!');
+
+    return false;
+  }
+
+  return true;
+};
+
+const handleSubmit = async () => {
+  errors.value = [];
+
+  if (!validateData()) {
     return;
   }
 
@@ -50,12 +63,14 @@ const handleSubmit = async () => {
     };
   }
 
-  const response = await fetch(url, requestData);
+  try {
+    const response = await fetch(url, requestData);
 
-  if (response.ok) {
-    console.log('success');
-  } else {
-    console.log('error');
+    if (response.ok) {
+      await router.push({ path: '/' });
+    }
+  } catch (e) {
+    errors.value.push('oopsie, something went wrong! Error: ' + e);
   }
 };
 
@@ -65,7 +80,12 @@ const handleSubmit = async () => {
   <form @submit.prevent="handleSubmit" ref="form">
     <div>
       <label for="title">Title</label>
-      <input name="title" type="text" :value="props.title" required>
+      <input
+          name="title"
+          type="text"
+          :value="props.title"
+          required
+      >
     </div>
     <div>
       <label for="description">Description</label>
@@ -79,7 +99,12 @@ const handleSubmit = async () => {
     </div>
     <div>
       <label for="price">Price</label>
-      <input name="price" type="text" :value="props.price" required>
+      <input
+          name="price"
+          type="number"
+          :value="props.price"
+          required
+      >
     </div>
     <div>
       <label for="image">Image</label>
@@ -90,6 +115,9 @@ const handleSubmit = async () => {
           accept="image/jpeg,image/png"
           multiple
       >
+    </div>
+    <div v-for="error in errors">
+      {{ error }}
     </div>
     <button type="submit">Submit</button>
   </form>
