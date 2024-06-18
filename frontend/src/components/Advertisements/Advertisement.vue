@@ -14,7 +14,7 @@ const props = defineProps({
     <div v-if="props.advertisement?.files">
       <a
           v-for="(file, index) in props.advertisement.files"
-          :href="`${config.backendUrl}image/${file.name}`"
+          :href="`${config.backendUrl}/image/${file.name}`"
           target="_blank"
           download
       >

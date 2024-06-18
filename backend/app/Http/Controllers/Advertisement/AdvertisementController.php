@@ -26,10 +26,10 @@ class AdvertisementController extends Controller
 
     public function show(int $id): JsonResponse
     {
-        $advertisement = $this->service->findAdvertisement($id);
+        $advertisement = $this->service->findAdvertisementWithFiles($id);
 
         return response()->json($advertisement->only([
-            'id', 'title', 'description', 'price',
+            'id', 'title', 'description', 'price', 'files',
         ]));
     }
 
@@ -47,7 +47,7 @@ class AdvertisementController extends Controller
         return response()->json($advertisement);
     }
 
-    public function update(int $id, AdvertisementGeneralRequest $request): JsonResponse
+    public function update(AdvertisementGeneralRequest $request, int $id): JsonResponse
     {
         $advertisementDTO = new AdvertisementDTO(
             $request->validated(['title']),
@@ -56,7 +56,7 @@ class AdvertisementController extends Controller
             $request->file('files'),
         );
 
-        $advertisement = $this->service->findAdvertisement($id);
+        $advertisement = $this->service->findAdvertisementWithFiles($id);
         $advertisement = $this->service->updateAdvertisement($advertisement, $advertisementDTO);
 
         return response()->json($advertisement);

@@ -15,6 +15,11 @@ class AdvertisementService
         return Advertisement::find($id);
     }
 
+    public function findAdvertisementWithFiles(int $id): Advertisement
+    {
+        return Advertisement::with('files')->find($id);
+    }
+
     public function getAllAdvertisements(): Collection
     {
         return Advertisement::all();
@@ -61,7 +66,7 @@ class AdvertisementService
 
     private function deleteAdvertisementFiles(Advertisement $advertisement): void
     {
-        foreach ($advertisement->files() as $file) {
+        foreach ($advertisement->files as $file) {
             $path = $file->name;
             Storage::delete($path);
 
