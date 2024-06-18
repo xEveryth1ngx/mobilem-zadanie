@@ -16,4 +16,4 @@ Route::get('/show/{id}', [AdvertisementController::class, 'show'])->name('show')
 Route::post('/create', [AdvertisementController::class, 'store'])->name('store');
 Route::put('/update/{id}', [AdvertisementController::class, 'update'])->name('update');
 
-Route::post('/image', [FileController::class, 'getImage'])->name('getImage');
+Route::get('/image/public/{path}', [FileController::class, 'getImage'])->name('getImage');

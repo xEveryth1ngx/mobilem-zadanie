@@ -81,3 +81,11 @@ button:focus-visible {
 body {
   width: 100%;
 }
+
+.advertisement-container {
+  padding: 1rem;
+  background-color: #213547;
+  border-radius: 15px;
+  margin: 1rem;
+  cursor: pointer;
+}

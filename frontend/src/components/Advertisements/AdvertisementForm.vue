@@ -1,8 +1,30 @@
 <script setup>
-import {ref, watch} from 'vue';
+import {ref} from 'vue';
+import {config} from "../../config.js";
+
+const props = defineProps({
+  path: String,
+  title: {
+    type: String,
+    required: false,
+  },
+  description: {
+    type: String,
+    required: false,
+  },
+  price: {
+    type: Number,
+    required: false,
+  }
+})
 
 const form = ref(null);
 const files = ref(null);
+const values = ref({
+  title: props.title,
+  description: props.description,
+  price: props.price,
+});
 
 const handleSubmit = async () => {
   if (files.value.files.length > 5) {
@@ -12,7 +34,7 @@ const handleSubmit = async () => {
 
   const formDataObject = new FormData(form.value);
 
-  const response = await fetch('http://localhost:8080/api/create', {
+  const response = await fetch(config.backendUrl + '/' + props.path, {
     method: 'POST',
     body: formDataObject
   });
@@ -22,25 +44,29 @@ const handleSubmit = async () => {
   } else {
     console.log('error');
   }
-
-  const data = await response.json();
 };
 
 </script>
 
 <template>
-  <form @submit.prevent="handleSubmit" ref="form" class="main-container">
+  <form @submit.prevent="handleSubmit" ref="form">
     <div>
       <label for="title">Title</label>
-      <input name="title" type="text">
+      <input name="title" type="text" :value="values.title" required>
     </div>
     <div>
       <label for="description">Description</label>
-      <textarea name="description"></textarea>
+      <textarea
+          name="description"
+          :value="values.description"
+          required
+      >
+        {{ values.description }}
+      </textarea>
     </div>
     <div>
       <label for="price">Price</label>
-      <input name="price" type="text">
+      <input name="price" type="text" :value="values.price" required>
     </div>
     <div>
       <label for="image">Image</label>
@@ -57,21 +83,6 @@ const handleSubmit = async () => {
 </template>
 
 <style scoped>
-  .main-container {
-    width: 100%;
-    max-width: 500px;
-    margin: 1rem auto;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .main-container > div {
-    margin-bottom: 20px;
-    display: flex;
-    gap: 6px;
-  }
-
   input {
     margin-bottom: 10px;
   }
